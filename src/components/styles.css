@@ -1,0 +1,93 @@
+/* styles.css */
+body{
+    background-color: rgb(225, 242, 250);
+}
+
+.headingContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 10%;
+    margin-right: 10%;
+
+}
+
+
+#heading1{
+    /* font-family:Arial, Helvetica, sans-serif; */
+    font-family: 'Pacifico', cursive;
+
+    font-size: 30px;
+    text-decoration: underline;
+    color: rgb(9, 9, 128);
+}
+
+.mainContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* flex-direction: column; */
+    /* background-color: rgb(223, 247, 250); */
+    background: url("../assets/backgroundImage.jpg") center center/cover no-repeat; 
+
+    /* 
+        'center center': Specifies the horizontal and vertical position of the background image.
+        In this case, it centeres the image both horizontally and vertically within the container.
+
+        
+        /cover: It ensures that the backgroung image covers the entire container,
+        and it may be cropped to achieve this. 
+
+        no-repeat : Specifies that the background image should not be repeated.
+        It will be displayed only once. 
+    */
+
+}
+
+#heading2{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 25px;
+    color: blue;
+    
+}
+
+.inputForm{
+    width: 500px;
+    height: auto;
+    border: 1px solid black;
+    display: flex;
+    margin: 10px;
+    padding: 20px;
+    justify-content: space-between;
+    align-items: flex-start; /*Place the items at the start*/
+    flex-direction: column;
+    background-color: rgb(235, 241, 243);
+    border-radius: 5px;
+      text-align: left;
+
+}
+
+/*Add margin below each label*/
+.inputForm label{ 
+    margin-bottom: 10px;
+    text-align: left;
+    display: block; /* Make labels block elements to occupy the full width of the container - Important for
+    form elememts to start from the same position in the left */
+
+}
+
+/*Add margin below each input*/
+.inputForm input {
+    border-radius: 3px;
+    margin-bottom: 10px; 
+    
+}
+
+.inputfield{
+    height: 30px;
+    min-width: 200px; 
+    width: 100%;/*Ask Why isn't it working? */
+    border-radius: 3px;
+    
+}
