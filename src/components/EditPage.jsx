@@ -1,24 +1,47 @@
-// ToDoList.jsx
+// EditPage.jsx
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 import { Button, InputBase } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 import TextField from "@mui/material/TextField";
 
-function ToDoList() {
-  //const [toDoList, setToDoList] = useState([]);
+function EditPage() {
+  //Change
+  const location = useLocation();
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [userInput, setUserInput] = useState({
     userid: "",
     title: "",
     completed: false,
   });
 
-  const navigate = useNavigate();
+  //const [newItemCounter, setNewItemCounter] = useState(0);
 
-  //change
-  const [newItemCounter, setNewItemCounter] = useState(0);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3002/todolist/${id}`
+          // The id in the URL is a parameter retrieved using the useParams hook
+        );
+        const data = response.data;
+        console.log("Data:", data);
+        setUserInput({
+          userid: data.userid,
+          title: data.title,
+          completed: data.completed,
+        });
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [id]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -33,38 +56,28 @@ function ToDoList() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    //Increment the ID before sending it to the server
-    setNewItemCounter((prevCounter) => prevCounter + 1);
-
-    //Assign the counter value as the new id
-    const newItem = {
-      id: newItemCounter,
-      userid: userInput.userid, //
-      title: userInput.title,
-      completed: userInput.completed,
-    };
+    // Perform the update logic using the id of the item being edited
+    const itemId = location.state?.id; // We may need to pass the id when navigating
 
     try {
-      const response = await axios.post(
-        "http://localhost:3002/todolist/",
-        newItem
+      const response = await axios.patch(
+        `http://localhost:3002/todolist/${id}`,
+        {
+          ...userInput, // Spread userInput properties
+          id: parseInt(id), //Include the id in the request body
+        }
       );
 
       if (response.status === 200) {
-        console.log("Data sent successfully");
+        console.log("Data updated successfully");
+
         navigate("/home"); // Navigate after successful submission
       } else {
-        console.error("Failed to send data:", response.status);
+        console.error("Failed to update data:", response.status);
       }
     } catch (error) {
-      console.error("Error sending data:", error);
+      console.error("Error updating data:", error);
     }
-
-    setUserInput({
-      userid: "",
-      title: "",
-      completed: false,
-    });
   };
 
   const handleButtonClick = () => {
@@ -75,7 +88,7 @@ function ToDoList() {
     <React.Fragment>
       <div className="fragment1">
         <div className="headingContainer">
-          <h2 id="heading1">ToDoList</h2>
+          <h2 id="heading1">Edit Task</h2>
           <Button
             variant="contained"
             color="success"
@@ -85,10 +98,10 @@ function ToDoList() {
             Homepage
           </Button>
         </div>
-        {/* Form to add new ToDo */}
+
         <div className="mainContainer">
           <div className="inputForm">
-            <h3 id="heading2">Enter new Task</h3>
+            <h3 id="heading2">Update Task Details</h3>
 
             <form onSubmit={handleFormSubmit}>
               <label htmlFor="textarea1">
@@ -126,10 +139,10 @@ function ToDoList() {
                 <Button
                   variant="contained"
                   color="success"
-                  id="button1"
+                  id="button3"
                   type="submit"
                 >
-                  Add New Task
+                  Update & Save
                 </Button>
               </div>
             </form>
@@ -140,4 +153,4 @@ function ToDoList() {
   );
 }
 
-export default ToDoList;
+export default EditPage;

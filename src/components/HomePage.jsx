@@ -6,6 +6,7 @@ import { Button, Checkbox } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Delete } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
+import EditPage from "../components/EditPage";
 
 function HomePage() {
   const [toDoList, setToDoList] = useState([]);
@@ -47,7 +48,7 @@ function HomePage() {
 
           try {
             const response = await axios.get("http://localhost:3002/todolist");
-            const data = await response.data;
+            const data = await response.data; // try without await
             setToDoList(data);
             setNewItemCounter(data.length);
           } catch (error) {
@@ -56,7 +57,7 @@ function HomePage() {
         };
         // Call fetchData with the id of the deleted item
 
-        fetchData();
+        fetchUpdateData();
       } else {
         console.log("Failed to delete data:", response.status);
       }
@@ -65,12 +66,13 @@ function HomePage() {
     }
   };
 
-  const handleToggleStatus = async (id, completed) => {
+  const handleToggleStatus = async (id, data) => {
     try {
       const response = await axios.patch(
         `http://localhost:3002/todolist/${id}`,
         {
-          completed: !completed, //Toggle the status
+          ...data,
+          completed: !data.completed, //Toggle the status
         }
       );
 
@@ -89,12 +91,26 @@ function HomePage() {
             console.log("Error fetching data:", error);
           }
         };
-        fetchData();
+        fetchUpdateData();
       } else {
         console.log("Failed to toggle status:", response.status);
       }
     } catch (error) {
       console.log("Error toggling status:", error);
+    }
+  };
+
+  //Function to fetch updated data
+  const fetchUpdateData = async () => {
+    console.log("Fetching updated data...");
+
+    try {
+      const response = await axios.get("http://localhost:3002/todolist");
+      const data = response.data;
+      setToDoList(data);
+      setNewItemCounter(data.length);
+    } catch (error) {
+      console.log("Error fetching data:", error);
     }
   };
 
@@ -141,22 +157,30 @@ function HomePage() {
                         name="completed"
                         checked={listContent.completed}
                         onChange={() =>
-                          handleToggleStatus(
-                            listContent.id,
-                            listContent.completed
-                          )
+                          handleToggleStatus(listContent.id, listContent)
                         }
-                        //   value={userInput.completed}
-                        //   onChange={handleInputChange}
                       />
                     </td>
                     {/* <td>{listContent.completed ? 'Yes' : 'No'}</td> */}
                     <td>
-                      <EditIcon />
+                      {/* Change */}
+                      {/* <EditIcon
+                        onClick={() =>
+                          navigate(`/edit/${listContent.id}`, {
+                            state: {
+                              id: listContent.id,
+                              userid: listContent.userid,
+                              title: listContent.title,
+                            },
+                          })
+                        }
+                      /> */}
+                      <EditIcon
+                        onClick={() => navigate(`/edit/${listContent.id}`)}
+                      />
                       &nbsp;&nbsp;&nbsp;&nbsp;
                       <Delete onClick={() => handleDelete(listContent.id)} />
                     </td>
-                    {/* &nbsp is used to add the non-breaking space entity */}
                   </tr>
                 ))}
               </tbody>

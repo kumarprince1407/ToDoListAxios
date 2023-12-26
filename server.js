@@ -11,10 +11,28 @@ const port = 3002;
 app.use(bodyParser.json());
 app.use(cors()); //Enable CORS
 
-let todolistData = [];
+let todolistData = [
+  { id: 1, userid: "101", title: "Task", completed: false },
+  { id: 2, userid: "102", title: "Task 2", completed: true },
+  { id: 3, userid: "103", title: "Task 3", completed: false },
+];
 
 app.get("/todolist/", (req, res) => {
   res.json(todolistData);
+});
+
+//get method to update data
+app.get("/todolist/:id", (req, res) => {
+  const idToFetch = parseInt(req.params.id);
+  console.log("ID to fetch", idToFetch);
+  const itemToFetch = todolistData.find((item) => item.id === idToFetch);
+
+  if (itemToFetch) {
+    res.json(itemToFetch);
+  } else {
+    res.status(404).send("Item not found");
+  }
+  console.log("Item to fetch:", itemToFetch);
 });
 
 app.post("/todolist", (req, res) => {
@@ -36,16 +54,36 @@ app.post("/todolist", (req, res) => {
 });
 
 //Update endpoint to toggle the completed status
+// app.patch("/todolist/:id", (req, res) => {
+//   const idToUpdate = parseInt(req.params.id);
+//   const { completed } = req.body;
+
+//   const itemToUpdate = todolistData.find((item) => item.id === idToUpdate);
+
+//   if (itemToUpdate) {
+//     //If the item is found, update its completed status
+//     itemToUpdate.completed = completed;
+//     res.status(200).send("Status toggled successfully");
+//   } else {
+//     //If the item is not found, send a 404 response
+//     res.status(404).send("Item not found");
+//   }
+// });
+
 app.patch("/todolist/:id", (req, res) => {
   const idToUpdate = parseInt(req.params.id);
-  const { completed } = req.body;
+  // const { completed } = req.body;
 
   const itemToUpdate = todolistData.find((item) => item.id === idToUpdate);
 
   if (itemToUpdate) {
     //If the item is found, update its completed status
+    const { userid, title, completed } = req.body;
+    itemToUpdate.userid = userid;
+    itemToUpdate.title = title;
     itemToUpdate.completed = completed;
-    res.status(200).send("Status toggled successfully");
+    console.log("Item to update: ", itemToUpdate);
+    res.status(200).send(itemToUpdate);
   } else {
     //If the item is not found, send a 404 response
     res.status(404).send("Item not found");
