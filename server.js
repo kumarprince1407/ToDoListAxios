@@ -53,23 +53,6 @@ app.post("/todolist", (req, res) => {
   res.status(200).send("Data received successfully");
 });
 
-//Update endpoint to toggle the completed status
-// app.patch("/todolist/:id", (req, res) => {
-//   const idToUpdate = parseInt(req.params.id);
-//   const { completed } = req.body;
-
-//   const itemToUpdate = todolistData.find((item) => item.id === idToUpdate);
-
-//   if (itemToUpdate) {
-//     //If the item is found, update its completed status
-//     itemToUpdate.completed = completed;
-//     res.status(200).send("Status toggled successfully");
-//   } else {
-//     //If the item is not found, send a 404 response
-//     res.status(404).send("Item not found");
-//   }
-// });
-
 app.patch("/todolist/:id", (req, res) => {
   const idToUpdate = parseInt(req.params.id);
   // const { completed } = req.body;

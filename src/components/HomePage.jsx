@@ -1,4 +1,5 @@
-// HomePage.jsx
+//Redux
+//HomePage.jsx
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import "./HomePage.css";
@@ -8,111 +9,39 @@ import { Delete } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import EditPage from "../components/EditPage";
 
-function HomePage() {
-  const [toDoList, setToDoList] = useState([]);
-
-  //To increment count of serial number
-  const [newItemCounter, setNewItemCounter] = useState(0);
-
+import { toDoList, deleteTask, toggleTaskStatus } from "../redux/actions";
+import { connect } from "react-redux";
+import store from "../redux/store";
+function HomePage({ toDoList, fetchToDoList, deleteTask, toggleTaskStatus }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:3002/todolist"); //Updated URL
-        const data = await response.json();
-        console.log("Fetched data:", data); // Add this line
-
-        setToDoList(data);
-        setNewItemCounter(data.length); //Set the newItemCounter based on the number of elements
-      } catch (error) {
-        console.log("Error fetching data:", error);
-      }
-    };
-    fetchData();
+    //Fetch initial data when the component mounts
+    // fetchToDoList();
   }, []);
 
   //Delete
-  const handleDelete = async (id) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:3002/todolist/${id}`
-      );
-
-      if (response.status === 200) {
-        console.log("Data deleted successfully");
-
-        // Fetch the updated data after deletion
-        const fetchData = async () => {
-          console.log("Fetching updated data...");
-
-          try {
-            const response = await axios.get("http://localhost:3002/todolist");
-            const data = await response.data; // try without await
-            setToDoList(data);
-            setNewItemCounter(data.length);
-          } catch (error) {
-            console.log("Error fetching data:", error);
-          }
-        };
-        // Call fetchData with the id of the deleted item
-
-        fetchUpdateData();
-      } else {
-        console.log("Failed to delete data:", response.status);
-      }
-    } catch (error) {
-      console.error("Error deleting data:", error);
-    }
+  const handleDelete = (id) => {
+    deleteTask(id);
   };
 
   const handleToggleStatus = async (id, data) => {
-    try {
-      const response = await axios.patch(
-        `http://localhost:3002/todolist/${id}`,
-        {
-          ...data,
-          completed: !data.completed, //Toggle the status
-        }
-      );
-
-      if (response.status === 200) {
-        console.log("Status toggled successfully.");
-
-        const fetchData = async () => {
-          console.log("Fetching updated data...");
-
-          try {
-            const response = await axios.get("http://localhost:3002/todolist");
-            const data = response.data;
-            setToDoList(data);
-            setNewItemCounter(data.length);
-          } catch (error) {
-            console.log("Error fetching data:", error);
-          }
-        };
-        fetchUpdateData();
-      } else {
-        console.log("Failed to toggle status:", response.status);
-      }
-    } catch (error) {
-      console.log("Error toggling status:", error);
-    }
+    toggleTaskStatus(id, !data.completed);
   };
 
   //Function to fetch updated data
-  const fetchUpdateData = async () => {
-    console.log("Fetching updated data...");
+  // const fetchUpdateData = async () => {
+  //   console.log("Fetching updated data...");
 
-    try {
-      const response = await axios.get("http://localhost:3002/todolist");
-      const data = response.data;
-      setToDoList(data);
-      setNewItemCounter(data.length);
-    } catch (error) {
-      console.log("Error fetching data:", error);
-    }
-  };
+  //   try {
+  //     const response = await axios.get("http://localhost:3002/todolist");
+  //     const data = response.data;
+  //     setToDoList(data);
+  //     setNewItemCounter(data.length);
+  //   } catch (error) {
+  //     console.log("Error fetching data:", error);
+  //   }
+  // };
 
   return (
     <React.Fragment>
@@ -192,4 +121,14 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+const mapStateToProps = (state) => ({
+  toDoList: state.todolistData,
+});
+
+const mapDispatchToProps = {
+  // fetchToDoList,
+  deleteTask,
+  toggleTaskStatus,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

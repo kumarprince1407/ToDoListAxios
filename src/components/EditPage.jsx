@@ -1,3 +1,4 @@
+//Redux
 // EditPage.jsx
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -6,9 +7,12 @@ import { Button, InputBase } from "@mui/material";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 import TextField from "@mui/material/TextField";
+import { connect } from "react-redux";
+import store from "../redux/store";
+
+import { updateTask } from "../redux/actions";
 
 function EditPage() {
-  //Change
   const location = useLocation();
 
   const { id } = useParams();
@@ -153,4 +157,5 @@ function EditPage() {
   );
 }
 
-export default EditPage;
+export default connect(null, { updateTask })(EditPage);
+//export default EditPage;

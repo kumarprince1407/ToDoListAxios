@@ -1,4 +1,5 @@
-// ToDoList.jsx
+//Redux
+//ToDoList.jsx
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import "./styles.css";
@@ -6,9 +7,12 @@ import { Button, InputBase } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import TextField from "@mui/material/TextField";
+import { connect } from "react-redux";
+import { addTask } from "../redux/actions";
 
-function ToDoList() {
-  //const [toDoList, setToDoList] = useState([]);
+import store from "../redux/store";
+
+function ToDoList({ todolistData, addTask }) {
   const [userInput, setUserInput] = useState({
     userid: "",
     title: "",
@@ -18,7 +22,7 @@ function ToDoList() {
   const navigate = useNavigate();
 
   //change
-  const [newItemCounter, setNewItemCounter] = useState(0);
+  // const [newItemCounter, setNewItemCounter] = useState(0);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -34,32 +38,17 @@ function ToDoList() {
     e.preventDefault();
 
     //Increment the ID before sending it to the server
-    setNewItemCounter((prevCounter) => prevCounter + 1);
+    // setNewItemCounter((prevCounter) => prevCounter + 1);
 
     //Assign the counter value as the new id
     const newItem = {
-      id: newItemCounter,
-      userid: userInput.userid, //
+      id: todolistData.length + 1,
+      userid: userInput.userid,
       title: userInput.title,
       completed: userInput.completed,
     };
 
-    try {
-      const response = await axios.post(
-        "http://localhost:3002/todolist/",
-        newItem
-      );
-
-      if (response.status === 200) {
-        console.log("Data sent successfully");
-        navigate("/home"); // Navigate after successful submission
-      } else {
-        console.error("Failed to send data:", response.status);
-      }
-    } catch (error) {
-      console.error("Error sending data:", error);
-    }
-
+    addTask(newItem);
     setUserInput({
       userid: "",
       title: "",
@@ -140,4 +129,14 @@ function ToDoList() {
   );
 }
 
-export default ToDoList;
+const mapStateToProps = (state) => ({
+  todolistData: state.todolistData,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  addTask: (newTask) => dispatch(addTask(newTask)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ToDoList);
+
+//export default connect()(ToDoList);
