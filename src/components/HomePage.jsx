@@ -1,12 +1,12 @@
 //HomePage.jsx
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+//import EditPage from "../components/EditPage";
 import "./HomePage.css";
 import { Button, Checkbox } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Delete } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
-import EditPage from "../components/EditPage";
 
 import { fetchToDoList, deleteTask, toggleTaskStatus } from "../redux/actions";
 

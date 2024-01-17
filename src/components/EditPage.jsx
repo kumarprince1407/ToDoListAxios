@@ -1,7 +1,7 @@
 // EditPage.jsx
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import "./EditPage.css";
+import "./EditPage.scss";
 
 import { Button, InputBase } from "@mui/material";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -90,7 +90,7 @@ function EditPage() {
     <React.Fragment>
       <div className="fragment1">
         <div className="headingContainer">
-          <h2 id="heading1">Edit Task</h2>
+          <h2 id="editHeading1">Edit Task</h2>
           <Button
             className="homepage"
             variant="contained"
@@ -102,9 +102,9 @@ function EditPage() {
           </Button>
         </div>
 
-        <div className="mainContainer">
-          <div className="inputForm">
-            <h3 id="heading2">Update Task Details</h3>
+        <div className="editMainContainer">
+          <div className="editInputForm">
+            <h3 id="editHeading2">Update Task Details</h3>
 
             <form onSubmit={handleFormSubmit}>
               <label htmlFor="textarea1">
