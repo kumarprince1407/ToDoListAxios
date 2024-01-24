@@ -1,6 +1,6 @@
 // EditPage.jsx
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./EditPage.scss";
 
 import { Button, InputBase } from "@mui/material";
@@ -13,6 +13,8 @@ import store from "../redux/store";
 import { updateTask } from "../redux/actions";
 
 function EditPage() {
+  //Hooks to get the current location, extract the 'id' parameter from the URL using
+  //'useParams', and get the navigation function using useNavigate
   const location = useLocation();
 
   const { id } = useParams();
@@ -23,6 +25,9 @@ function EditPage() {
     title: "",
     completed: false,
   });
+
+  //Create a ref for the TextField input
+  const titleInputRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,6 +43,8 @@ function EditPage() {
           title: data.title,
           completed: data.completed,
         });
+        //Focus on the title input when the data is loaded
+        titleInputRef.current.focus();
       } catch (error) {
         console.log("Error fetching data:", error);
       }
@@ -131,6 +138,7 @@ function EditPage() {
                   name="title"
                   value={userInput.title}
                   onChange={handleInputChange}
+                  inputRef={titleInputRef} //Assign the ref to the TextField
                   sx={{ width: "150%" }}
                 />
               </label>

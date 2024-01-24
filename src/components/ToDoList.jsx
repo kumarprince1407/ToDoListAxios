@@ -29,9 +29,13 @@ function ToDoList({ todolistData, addTask }) {
   }, [todolistData]);
 
   const handleInputChange = (e) => {
+    // Destructuring properties from the event target object
     const { name, value, type, checked } = e.target;
+    console.log(e.target);
+    // Determine the input value based on the input type (checkbox or other)
     const inputValue = type === "checkbox" ? checked : value;
 
+    // Update the state using the setUserInput function
     setUserInput((prevState) => ({
       ...prevState,
       //change
@@ -137,7 +141,7 @@ function ToDoList({ todolistData, addTask }) {
     </React.Fragment>
   );
 }
-
+//Defining mapStateToProps and mapDispatchToProps to connect the component to the redux store
 const mapStateToProps = (state) => ({
   todolistData: state.todolistData,
 });
@@ -145,5 +149,5 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   addTask: (newTask) => dispatch(addTask(newTask)),
 });
-
+//The connect function connects the component to the Redux store and provides the necessary props(todolistData and addTask)
 export default connect(mapStateToProps, mapDispatchToProps)(ToDoList);

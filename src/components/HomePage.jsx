@@ -1,5 +1,6 @@
 //HomePage.jsx
 import axios from "axios";
+//Change
 import React, { useState, useEffect } from "react";
 import EditPage from "../components/EditPage";
 import "./HomePage.css";
@@ -19,7 +20,8 @@ function HomePage() {
   //useSelector, useDisPatch implementation
   const navigate = useNavigate();
 
-  //Replace mapStateToProps and mapDispatchToProps
+  //Replace mapStateToProps and mapDispatchToProps with useDispatch hook for hooks implementation
+  //toDoList is now obtained from the Redux store using useSelector, and dispatch using dispatch actions
   const toDoList = useSelector((state) => state.todolistData);
   const dispatch = useDispatch();
 
